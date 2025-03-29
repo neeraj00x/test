@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/clay/lib/css/atlas.css">
+<script src="https://cdn.jsdelivr.net/npm/clay/lib/js/clay.js"></script>
   <head>
     <title>Other page</title>
     <meta charset="UTF-8" />
@@ -60,5 +62,64 @@ h1 {
     <main>
       <h1>My other page</h1>
     </main>
+    <div class="form-group">
+	<label class="toggle-switch">
+		<input class="toggle-switch-check" type="checkbox" />
+		<span aria-hidden="true" class="toggle-switch-bar">
+			<span class="toggle-switch-handle" data-label-off="" data-label-on="">
+				<span class="button-icon button-icon-on toggle-switch-icon">
+					<svg class="lexicon-icon lexicon-icon-unlock" focusable="false" role="presentation">
+						<use href="/images/icons/icons.svg#unlock" />
+					</svg>
+				</span>
+				<span class="button-icon button-icon-off toggle-switch-icon">
+					<svg class="lexicon-icon lexicon-icon-lock" focusable="false" role="presentation">
+						<use href="/images/icons/icons.svg#lock" />
+					</svg>
+				</span>
+			</span>
+		</span>
+	</label>
+</div>
+<div class="form-group">
+	<label class="toggle-switch">
+		<input class="toggle-switch-check" type="checkbox" />
+		<span class="toggle-switch-label">Toggle Switch with data-label-on</span>
+		<span aria-hidden="true" class="toggle-switch-bar">
+			<span class="toggle-switch-handle" data-label-off="" data-label-on="LIVE">
+				<span class="button-icon button-icon-on toggle-switch-icon">
+					<svg class="lexicon-icon lexicon-icon-live" focusable="false" role="presentation">
+						<use href="/images/icons/icons.svg#live" />
+					</svg>
+				</span>
+				<span class="button-icon button-icon-off toggle-switch-icon">
+					<svg class="lexicon-icon lexicon-icon-staging" focusable="false" role="presentation">
+						<use href="/images/icons/icons.svg#staging" />
+					</svg>
+				</span>
+			</span>
+		</span>
+	</label>
+</div>
+<div class="form-group">
+	<label class="toggle-switch">
+		<input class="toggle-switch-check" type="checkbox" />
+		<span class="toggle-switch-label">Toggle Switch with data-label on and data-label-off</span>
+		<span aria-hidden="true" class="toggle-switch-bar">
+			<span class="toggle-switch-handle" data-label-off="Product Menu Closed" data-label-on="Product Menu Open">
+				<span class="button-icon button-icon-on toggle-switch-icon">
+					<svg class="lexicon-icon lexicon-icon-product-menu-open" focusable="false" role="presentation">
+						<use href="/images/icons/icons.svg#product-menu-open" />
+					</svg>
+				</span>
+				<span class="button-icon button-icon-off toggle-switch-icon">
+					<svg class="lexicon-icon lexicon-icon-product-menu-closed" focusable="false" role="presentation">
+						<use href="/images/icons/icons.svg#product-menu-closed" />
+					</svg>
+				</span>
+			</span>
+		</span>
+	</label>
+</div>
   </body>
 </html>
