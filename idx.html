@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="data:,">
     <title>ESP32 LED Control</title>
     <style>
@@ -11,6 +12,22 @@
         .button { background-color: yellowgreen; border: none; color: white; padding: 12px 30px;
                   text-decoration: none; font-size: 24px; margin: 2px; cursor: pointer; height: 50px; width:100px; border-radius:5px; }
         .button.off { background-color: gray; }
+        .icons {
+            display: flex;
+            justify-content: space-around;
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        .bulb {
+            font-size: 100px;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .bulb.on {
+            color: #ffeb3b; /* Bright yellow for bulb when ON */
+        }
     </style>
 </head>
 <body>
@@ -42,7 +59,7 @@
 
         function updateUI(led, newState) {
             let btn = document.getElementById('btn' + led);
-            btn.innerText = newState ? "ON" : "OFF";
+            btn.innerText = newState ? "<i id="bulbIcon" class="fas fa-lightbulb bulb on"></i>" : "<i id="bulbIcon" class="fas fa-lightbulb bulb"></i>";
             btn.className = newState ? "button" : "button off";
         }
 
