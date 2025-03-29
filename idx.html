@@ -59,7 +59,7 @@
 
         function updateUI(led, newState) {
             let btn = document.getElementById('btn' + led);
-            btn.innerText = newState ? "<i id="bulbIcon" class="fas fa-lightbulb bulb on"></i>" : "<i id="bulbIcon" class="fas fa-lightbulb bulb"></i>";
+            btn.innerText = newState ? '<i id="bulbIcon" class="fas fa-lightbulb bulb on"></i>' : '<i id="bulbIcon" class="fas fa-lightbulb bulb"></i>';
             btn.className = newState ? "button" : "button off";
         }
 
