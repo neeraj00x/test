@@ -2,163 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Controlled Bulb & Fan</title>
-    <!-- Font Awesome for the icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <title>ESP32 LED Control</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .icons {
-            display: flex;
-            justify-content: space-around;
-            width: 300px;
-            margin: 0 auto;
-        }
-
-        .bulb, .fan {
-            font-size: 100px;
-            color: #555;
-            transition: color 0.3s ease;
-        }
-
-        .bulb.on {
-            color: #ffeb3b; /* Bright yellow for bulb when ON */
-        }
-
-        .fan.on {
-            color: #03a9f4; /* Blue for fan when ON */
-            animation: rotate 2s linear infinite;
-        }
-
-        @keyframes rotate {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        h1 {
-            font-size: 36px;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .status {
-            font-size: 20px;
-            margin-top: 10px;
-            color: #666;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #6200ea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:focus {
-            outline: none;
-        }
-
-        button:active {
-            background-color: #3700b3;
-        }
+        html { font-family: monospace; display: inline-block; margin: 0px auto; text-align: center; }
+        h1 { color: black; }
+        .button { background-color: yellowgreen; border: none; color: white; padding: 12px 30px;
+                  text-decoration: none; font-size: 24px; margin: 2px; cursor: pointer; height: 50px; width:100px; border-radius:5px; }
+        .button.off { background-color: gray; }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <h1>Voice Controlled Bulb & Fan</h1>
-        <div class="icons">
-            <i id="bulbIcon" class="fas fa-lightbulb bulb"></i>
-            <i id="fanIcon" class="fas fa-fan fan"></i>
-        </div>
-        <p class="status" id="status">Say "Turn on" or "Turn off" to control the devices</p>
-        <button onclick="startListening()">Start Listening</button>
-    </div>
-
+    <h1>ESP32 Web Server</h1>
+    <p>Control LED State</p>
+    <button id="btn1" class="button" onclick="toggleLED(1)"></button>
+    <button id="btn2" class="button" onclick="toggleLED(2)"></button>
+    
     <script>
-        const bulbIcon = document.getElementById('bulbIcon');
-        const fanIcon = document.getElementById('fanIcon');
-        const statusText = document.getElementById('status');
-
-        function startListening() {
-            if ('webkitSpeechRecognition' in window) {
-                const recognition = new webkitSpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = 'en-US';
-
-                recognition.start();
-
-                recognition.onstart = function () {
-                    statusText.innerHTML = "Listening...";
-                };
-
-                recognition.onresult = function (event) {
-                    const voiceCommand = event.results[0][0].transcript.toLowerCase();
-                    statusText.innerHTML = `You said: "${voiceCommand}"`;
-
-                    if (voiceCommand.includes("turn on the light") || voiceCommand.includes("bulb on")) {
-                        turnOnBulb();
-                    } else if (voiceCommand.includes("turn off the light") || voiceCommand.includes("bulb off")) {
-                        turnOffBulb();
-                    } else if (voiceCommand.includes("fan on")) {
-                        turnOnFan();
-                    } else if (voiceCommand.includes("fan off")) {
-                        turnOffFan();
-                    } else {
-                        statusText.innerHTML = "Command not recognized. Try 'Turn on' or 'Turn off'";
-                    }
-                };
-
-                recognition.onerror = function () {
-                    statusText.innerHTML = "Sorry, there was an error.";
-                };
-
-                recognition.onend = function () {
-                    statusText.innerHTML = "Say 'Turn on' or 'Turn off' to control the devices";
-                };
-            } else {
-                alert("Your browser doesn't support voice recognition. Try Google Chrome.");
+        async function toggleLED(led) {
+            let response = await fetch('/status');
+            let data = await response.json();
+            let currentStatus = (led === 1) ? data.led1 : data.led2
+            let localStatus = document.getElementById('btn' + led).innerText == "ON" ? 1 : 0;
+            
+            if (currentStatus == localStatus) {  // Only toggle if LED is OFF
+                const res = await fetch('/control', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'led=' + led
+                });
+                const data = await res.json();
+                console.log(data)
             }
+            
+            // Update UI based on latest status
+            updateUI(led, !localStatus);
+        } 
+
+        function updateUI(led, newState) {
+            let btn = document.getElementById('btn' + led);
+            btn.innerText = newState ? "ON" : "OFF";
+            btn.className = newState ? "button" : "button off";
         }
 
-        function turnOnBulb() {
-            bulbIcon.classList.add('on');
-            statusText.innerHTML = "Bulb is turned ON";
+        async function getStatus() {
+            let response = await fetch('/status');
+            let data = await response.json();
+            updateUI(1, data.led1);
+            updateUI(2, data.led2);
         }
 
-        function turnOffBulb() {
-            bulbIcon.classList.remove('on');
-            statusText.innerHTML = "Bulb is turned OFF";
-        }
-
-        function turnOnFan() {
-            fanIcon.classList.add('on');
-            statusText.innerHTML = "Fan is turned ON";
-        }
-
-        function turnOffFan() {
-            fanIcon.classList.remove('on');
-            statusText.innerHTML = "Fan is turned OFF";
-        }
+        getStatus(); // Fetch status on page load
     </script>
 </body>
 </html>
